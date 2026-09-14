@@ -2,49 +2,165 @@ import calculator from '../pages/CalculatorPage';
 
 describe('Calculator form', () => {
   beforeEach(() => {
+    // Given
     calculator.open();
   });
 
-  it('validation', () => {
+  it('reports two errors on an empty form', () => {
+    // Given
     cy.get(calculator.selectors.policyholderName).clear();
     cy.get(calculator.selectors.age).clear();
+
+    // When
     calculator.calculate();
+
+    // Then
     cy.get('.error').should('have.length', 2);
+  });
+
+  it('reports a missing policyholder name', () => {
+    // Given
+    cy.get(calculator.selectors.policyholderName).clear();
+    cy.get(calculator.selectors.age).clear();
+
+    // When
+    calculator.calculate();
+
+    // Then
     cy.get('.error').eq(0).should('contain', 'Policyholder name is required');
+  });
+
+  it('reports a missing age', () => {
+    // Given
+    cy.get(calculator.selectors.policyholderName).clear();
+    cy.get(calculator.selectors.age).clear();
+
+    // When
+    calculator.calculate();
+
+    // Then
     cy.get('.error').eq(1).should('contain', 'Age is required');
+  });
+
+  it('does not show a result when the form fails validation', () => {
+    // Given
+    cy.get(calculator.selectors.policyholderName).clear();
+    cy.get(calculator.selectors.age).clear();
+
+    // When
+    calculator.calculate();
+
+    // Then
     calculator.verifyNoResult();
   });
 
-  it('INS-231 calculates and shows the result', () => {
+  it('calculates the premium for a policy with no previous claims', () => {
+    // Given
     calculator.enterPriorClaims(0);
+
+    // When
     calculator.calculate();
+
+    // Then
     calculator.verifyPremium('10 000 CZK');
+  });
+
+  it('shows the policy number in the result', () => {
+    // Given
+    calculator.enterPriorClaims(0);
+
+    // When
+    calculator.calculate();
+
+    // Then
     cy.get(calculator.selectors.summaryRow).eq(0).should('contain', 'POL-4821');
+  });
+
+  it('shows the number of previous claims in the result', () => {
+    // Given
+    calculator.enterPriorClaims(0);
+
+    // When
+    calculator.calculate();
+
+    // Then
     cy.get(calculator.selectors.summaryRow).eq(2).should('contain', '0');
+  });
+
+  it('shows the locked-offer notice for a policy due for renewal', () => {
+    // Given
+    calculator.enterPriorClaims(0);
+
+    // When
+    calculator.calculate();
+
+    // Then
     cy.expectText('.notice', 'The quote is locked for 7 days');
   });
 
-  it('previous claims raise it', () => {
+  it('adds 15 % to the premium for one previous claim', () => {
+    // When
     calculator.calculate();
+
+    // Then
     calculator.verifyPremium('11 500 CZK');
   });
 
-  it('test2', () => {
+  it('hides the result after the form is reset', () => {
+    // Given
     calculator.enterPriorClaims(0);
-    calculator.enterAge(30);
     calculator.calculate();
     calculator.verifyPremium('10 000 CZK');
+
+    // When
     calculator.reset();
+
+    // Then
     calculator.verifyNoResult();
+  });
+
+  it('restores the age from the policy after the form is reset', () => {
+    // Given
+    calculator.enterAge(30);
+
+    // When
+    calculator.reset();
+
+    // Then
     cy.get(calculator.selectors.age).should('have.value', '22');
+  });
+
+  it('restores the previous claims from the policy after the form is reset', () => {
+    // Given
+    calculator.enterPriorClaims(0);
+
+    // When
+    calculator.reset();
+
+    // Then
     cy.get(calculator.selectors.priorClaims).should('have.value', '1');
+  });
+
+  it('returns coverage to 50 % after the form is reset', () => {
+    // Given
+    calculator.drag(0.9);
+
+    // When
+    calculator.reset();
+
+    // Then
     calculator.verifyCoverage('50 %');
   });
 
-  it('the coverage drives the premium', () => {
+  it('scales the premium with the chosen coverage', () => {
+    // Given
     calculator.enterPriorClaims(0);
     calculator.drag(0.01);
+
+    // When
     calculator.calculate();
+
+    // Then
     calculator.verifyPremium('200 CZK');
   });
 });
