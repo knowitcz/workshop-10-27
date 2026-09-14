@@ -1,3 +1,5 @@
+import type { PolicyRecord } from '../../src/domain/types';
+
 export const selectors = {
   title: '.banner h1',
   sectionLabel: '.section-label',
@@ -37,8 +39,9 @@ export class PolicyRow {
 class PolicyListPage {
   selectors = selectors;
 
-  open() {
-    cy.intercept('GET', '/data/policies.json', { fixture: 'policies.json' }).as('policies');
+  open(policies?: PolicyRecord[]) {
+    const response = policies ? { body: policies } : { fixture: 'policies.json' };
+    cy.intercept('GET', '/data/policies.json', response).as('policies');
     cy.visit('/');
     cy.wait('@policies');
     cy.wait(2000);

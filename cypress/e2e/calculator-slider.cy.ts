@@ -1,9 +1,19 @@
+import { aPolicyList, EXPIRING } from '../builders/policy';
+import {
+  CHOSEN_COVERAGE,
+  CHOSEN_COVERAGE_PCT,
+  FULL_COVERAGE,
+  FULL_COVERAGE_PCT,
+  NO_COVERAGE,
+  NO_COVERAGE_PCT,
+  RENEWAL_PREMIUM_CHOSEN_COVERAGE,
+} from '../support/amounts';
 import calculator from '../pages/CalculatorPage';
 
 describe('Coverage slider', () => {
   beforeEach(() => {
     // Given
-    calculator.open();
+    calculator.open(EXPIRING, aPolicyList());
   });
 
   it('shows the chosen coverage percentage after dragging the slider', () => {
@@ -11,7 +21,7 @@ describe('Coverage slider', () => {
     calculator.drag(0.62);
 
     // Then
-    calculator.verifyCoverage('62 %');
+    calculator.verifyCoverage(CHOSEN_COVERAGE_PCT);
   });
 
   it('converts coverage into an amount in crowns', () => {
@@ -19,7 +29,7 @@ describe('Coverage slider', () => {
     calculator.drag(0.62);
 
     // Then
-    calculator.verifyCoverage('248 000 CZK');
+    calculator.verifyCoverage(CHOSEN_COVERAGE);
   });
 
   it('moves the slider fill to the chosen percentage', () => {
@@ -36,7 +46,7 @@ describe('Coverage slider', () => {
     cy.wait(200);
 
     // Then
-    calculator.verifyCoverage('0 %');
+    calculator.verifyCoverage(NO_COVERAGE_PCT);
   });
 
   it('shows no coverage amount at the left end of the slider', () => {
@@ -45,7 +55,7 @@ describe('Coverage slider', () => {
     cy.wait(200);
 
     // Then
-    calculator.verifyCoverage('0 CZK');
+    calculator.verifyCoverage(NO_COVERAGE);
   });
 
   it('sets coverage to 100 % at the right end of the slider', () => {
@@ -54,7 +64,7 @@ describe('Coverage slider', () => {
     cy.wait(200);
 
     // Then
-    calculator.verifyCoverage('100 %');
+    calculator.verifyCoverage(FULL_COVERAGE_PCT);
   });
 
   it('shows the full sum insured at 100 % coverage', () => {
@@ -63,7 +73,7 @@ describe('Coverage slider', () => {
     cy.wait(200);
 
     // Then
-    calculator.verifyCoverage('400 000 CZK');
+    calculator.verifyCoverage(FULL_COVERAGE);
   });
 
   it('clamps coverage at 100 % when dragged past the right edge', () => {
@@ -71,7 +81,7 @@ describe('Coverage slider', () => {
     calculator.drag(1.4);
 
     // Then
-    calculator.verifyCoverage('100 %');
+    calculator.verifyCoverage(FULL_COVERAGE_PCT);
   });
 
   it('clamps coverage at 0 % when dragged past the left edge', () => {
@@ -79,7 +89,7 @@ describe('Coverage slider', () => {
     calculator.drag(-0.4);
 
     // Then
-    calculator.verifyCoverage('0 %');
+    calculator.verifyCoverage(NO_COVERAGE_PCT);
   });
 
   it('carries the chosen coverage percentage into the result', () => {
@@ -91,7 +101,7 @@ describe('Coverage slider', () => {
     calculator.calculate();
 
     // Then
-    cy.get(calculator.selectors.summaryRow).eq(1).should('contain', '62 %');
+    cy.get(calculator.selectors.summaryRow).eq(1).should('contain', CHOSEN_COVERAGE_PCT);
   });
 
   it('carries the coverage amount into the result', () => {
@@ -103,7 +113,7 @@ describe('Coverage slider', () => {
     calculator.calculate();
 
     // Then
-    cy.get(calculator.selectors.summaryRow).eq(1).should('contain', '248 000 CZK');
+    cy.get(calculator.selectors.summaryRow).eq(1).should('contain', CHOSEN_COVERAGE);
   });
 
   it('calculates the premium at the chosen 62 % coverage', () => {
@@ -115,6 +125,6 @@ describe('Coverage slider', () => {
     calculator.calculate();
 
     // Then
-    calculator.verifyPremium('12 400 CZK');
+    calculator.verifyPremium(RENEWAL_PREMIUM_CHOSEN_COVERAGE);
   });
 });

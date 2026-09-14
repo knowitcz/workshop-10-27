@@ -1,3 +1,4 @@
+import type { PolicyRecord } from '../../src/domain/types';
 import policyList from './PolicyListPage';
 
 const SLIDER_W = 560;
@@ -16,8 +17,8 @@ class CalculatorPage {
     notice: '.notice',
   };
 
-  open(index = 0) {
-    policyList.open();
+  open(index = 0, policies?: PolicyRecord[]) {
+    policyList.open(policies);
     policyList.renew(index);
     cy.get(this.selectors.policyholderName).should('be.visible');
   }
