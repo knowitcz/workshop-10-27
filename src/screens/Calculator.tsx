@@ -83,6 +83,7 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
             type="text"
             id="policyholderName"
             name="policyholderName"
+            data-cy="policyholder-name"
             value={policyholderName}
             onChange={(e) => setPolicyholderName(e.target.value)}
           />
@@ -94,6 +95,7 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
             type="number"
             id="age"
             name="age"
+            data-cy="age"
             min="0"
             max="120"
             value={age}
@@ -144,6 +146,7 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
             type="number"
             id="priorClaims"
             name="priorClaims"
+            data-cy="prior-claims"
             min="0"
             step="1"
             value={priorClaims}
@@ -156,7 +159,7 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
         {errors.length > 0 && (
           <div className="errors">
             {errors.map((msg) => (
-              <p className="error" key={msg}>
+              <p className="error" data-cy="error" key={msg}>
                 {msg}
               </p>
             ))}
@@ -164,10 +167,10 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
         )}
 
         <div className="actions">
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary" data-cy="calculate">
             Calculate premium
           </button>
-          <button type="reset" className="btn btn-secondary">
+          <button type="reset" className="btn btn-secondary" data-cy="reset">
             Reset
           </button>
         </div>
@@ -177,30 +180,30 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
         <div className="card result">
           <h2 className="section-label">Calculation result</h2>
           <dl className="summary">
-            <div className="row">
+            <div className="row" data-cy="summary-policy">
               <dt>Policy</dt>
               <dd>{policy.policyNo}</dd>
             </div>
-            <div className="row">
+            <div className="row" data-cy="summary-coverage">
               <dt>Coverage level</dt>
               <dd>
                 {coverage} % — {formatCZK(coverageAmount(coverage))}
               </dd>
             </div>
-            <div className="row">
+            <div className="row" data-cy="summary-claims">
               <dt>Previous claims</dt>
               <dd>{priorClaims}</dd>
             </div>
             <div className="row total">
               <dt>Renewal premium</dt>
               <dd>
-                <h4>{formatCZK(premium)}</h4>
+                <h4 data-cy="premium">{formatCZK(premium)}</h4>
               </dd>
             </div>
           </dl>
 
           {expiring && (
-            <div className="notice">
+            <div className="notice" data-cy="notice">
               This policy expires in {daysLeft} days. The quote is locked for{' '}
               {QUOTE_LOCK_DAYS} days.
             </div>

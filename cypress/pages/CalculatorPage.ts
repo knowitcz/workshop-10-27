@@ -1,72 +1,84 @@
 import type { PolicyRecord } from '../../src/domain/types';
-import policyList from './PolicyListPage';
 
-const SLIDER_W = 560;
-
-class CalculatorPage {
-  selectors = {
-    policyholderName: 'input[name="policyholderName"]',
-    age: 'input[name="age"]',
-    priorClaims: 'input[name="priorClaims"]',
-    slider: '.slider',
-    fill: '.fill',
-    coverage: '.field-label .value',
-    premium: 'h4',
-    summaryRow: '.summary .row',
-    error: '.error',
-    notice: '.notice',
-  };
-
-  open(index = 0, policies?: PolicyRecord[]) {
-    policyList.open(policies);
-    policyList.renew(index);
-    cy.get(this.selectors.policyholderName).should('be.visible');
+export class CalculatorPage {
+  /** Open the calculator for one policy, optionally changing that policy. */
+  visit(policyNo: string, overrides: Partial<PolicyRecord> = {}) {
+    cy.openCalculator(policyNo, overrides);
+    return this;
   }
 
-  enterAge(age) {
-    cy.typeAmount(this.selectors.age, age);
+  // ---------- fields ----------
+  policyholderName() {
+    return cy.get('[data-cy=policyholder-name]');
   }
 
-  enterPriorClaims(count) {
-    cy.typeAmount(this.selectors.priorClaims, count);
+  age() {
+    return cy.get('[data-cy=age]');
+  }
+
+  priorClaims() {
+    return cy.get('[data-cy=prior-claims]');
+  }
+
+  // ---------- coverage ----------
+  coverageReadout() {
+    return cy.get('[data-cy=coverage-value]');
+  }
+
+  coverageFill() {
+    return cy.get('[data-cy=coverage-fill]');
+  }
+
+  setCoverage(fraction: number) {
+    cy.setCoverage(fraction);
+    return this;
+  }
+
+  // ---------- actions ----------
+  enterAge(age: number | string) {
+    cy.typeAmount('[data-cy=age]', age);
+    return this;
+  }
+
+  enterPriorClaims(count: number | string) {
+    cy.typeAmount('[data-cy=prior-claims]', count);
+    return this;
   }
 
   calculate() {
-    cy.contains('button', 'Calculate premium').click();
-    cy.wait(1500);
+    cy.get('[data-cy=calculate]').click();
+    return this;
   }
 
   reset() {
-    cy.contains('button', 'Reset').click();
-    cy.wait(1500);
+    cy.get('[data-cy=reset]').click();
+    return this;
   }
 
-  drag(fraction) {
-    cy.get(this.selectors.slider).then(($el) => {
-      const el = $el[0];
-      (el as any).setPointerCapture = () => {};
-      (el as any).hasPointerCapture = () => false;
-      const rect = el.getBoundingClientRect();
-      const x = rect.left + fraction * SLIDER_W;
-      const y = rect.top + rect.height / 2;
-      el.dispatchEvent(new PointerEvent('pointerdown', { clientX: x, clientY: y, bubbles: true, pointerId: 1 }));
-      el.dispatchEvent(new PointerEvent('pointermove', { clientX: x, clientY: y, bubbles: true, pointerId: 1 }));
-      el.dispatchEvent(new PointerEvent('pointerup', { clientX: x, clientY: y, bubbles: true, pointerId: 1 }));
-    });
-    cy.wait(1000);
+  // ---------- results ----------
+  premium() {
+    return cy.get('[data-cy=premium]');
   }
 
-  verifyPremium(amount) {
-    cy.get(this.selectors.premium).should('contain', amount);
+  notice() {
+    return cy.get('[data-cy=notice]');
   }
 
-  verifyNoResult() {
-    cy.get(this.selectors.premium).should('not.exist');
+  errors() {
+    return cy.get('[data-cy=error]');
   }
 
-  verifyCoverage(text) {
-    cy.get(this.selectors.coverage).should('contain', text);
+  summaryPolicy() {
+    return cy.get('[data-cy=summary-policy]');
+  }
+
+  summaryCoverage() {
+    return cy.get('[data-cy=summary-coverage]');
+  }
+
+  summaryClaims() {
+    return cy.get('[data-cy=summary-claims]');
   }
 }
 
-export default new CalculatorPage();
+export const calculator = new CalculatorPage();

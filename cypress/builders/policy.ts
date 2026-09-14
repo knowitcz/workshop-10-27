@@ -67,28 +67,31 @@ const SEED: PolicyRecord[] = [
   },
 ];
 
-/** Index of each policy in the list the builder produces. */
-export const EXPIRING = 0;
-export const ACTIVE = 1;
-export const SENIOR = 2;
-export const ALREADY_RENEWED = 3;
-export const MANY_CLAIMS = 4;
+/**
+ * Policies are addressed by number, never by position. A test that cares about
+ * the expiring policy says so; it does not encode the fact that the expiring
+ * one currently happens to be first.
+ */
+export const EXPIRING_POLICY = 'POL-4821';
+export const ACTIVE_POLICY = 'POL-1002';
+export const SENIOR_POLICY = 'POL-2318';
+export const RENEWED_POLICY = 'POL-5540';
+export const MANY_CLAIMS_POLICY = 'POL-7781';
 
 /** One policy, with whatever the test cares about overridden. */
 export function aPolicy(overrides: Partial<PolicyRecord> = {}): PolicyRecord {
-  return { ...SEED[EXPIRING], ...overrides };
+  return { ...SEED[0], ...overrides };
 }
 
 /**
- * The whole list. Pass overrides keyed by position to change individual
- * policies — every call builds fresh objects, so nothing a test does here can
- * reach another test.
+ * The whole list. Pass overrides keyed by policy number — every call builds
+ * fresh objects, so nothing a test does here can reach another test.
  *
- *   aPolicyList()                          // the five defaults
- *   aPolicyList({ [EXPIRING]: { policyStartYearsAgo: 11 } })
+ *   aPolicyList()                                  // the five defaults
+ *   aPolicyList({ [EXPIRING_POLICY]: { policyStartYearsAgo: 11 } })
  */
 export function aPolicyList(
-  overrides: Record<number, Partial<PolicyRecord>> = {}
+  overrides: Record<string, Partial<PolicyRecord>> = {}
 ): PolicyRecord[] {
-  return SEED.map((policy, index) => ({ ...policy, ...(overrides[index] || {}) }));
+  return SEED.map((policy) => ({ ...policy, ...(overrides[policy.policyNo] || {}) }));
 }

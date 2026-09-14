@@ -3,6 +3,15 @@ import { coverageAmount, formatCZK } from '../domain/calc';
 
 /** Width of the slider track in pixels. Matches `.slider` in styles.css. */
 export const SLIDER_W = 560;
+
+/**
+ * The one conversion between the two ways of talking about slider position:
+ * tests think in fractions of the track (0.0 – 1.0), the control thinks in
+ * pixels. Exported so a test cannot hold its own copy of the width.
+ */
+export function offsetForFraction(fraction: number): number {
+  return fraction * SLIDER_W;
+}
 export const SLIDER_MIN = 0;
 export const SLIDER_MAX = 100;
 
@@ -48,12 +57,13 @@ export default function CoverageSlider({ value, onChange }: Props) {
     <div>
       <p className="field-label">
         <span>Coverage level</span>
-        <span className="value">
+        <span className="value" data-cy="coverage-value">
           {value} % — {formatCZK(coverageAmount(value))}
         </span>
       </p>
       <div
         className="slider"
+        data-cy="coverage-slider"
         ref={trackRef}
         role="slider"
         aria-valuenow={value}
@@ -64,7 +74,7 @@ export default function CoverageSlider({ value, onChange }: Props) {
         onPointerUp={onPointerUp}
       >
         <div className="track" />
-        <div className="fill" style={{ width: pct + '%' }} />
+        <div className="fill" data-cy="coverage-fill" style={{ width: pct + '%' }} />
         <div className="handle" style={{ left: pct + '%' }} />
       </div>
       <div className="scale">

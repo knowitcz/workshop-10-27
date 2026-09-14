@@ -32,7 +32,7 @@ export default function PolicyList({ policies, onRenew }: Props) {
               const renewed = p.status === 'Renewed' || isRenewed(p.policyNo);
               const status = renewed ? 'Renewed' : p.status;
               return (
-                <tr className="policy-row" key={p.policyNo}>
+                <tr className="policy-row" data-cy="policy-row" key={p.policyNo}>
                   <td className="polno">{p.policyNo}</td>
                   <td>{p.policyholder}</td>
                   <td>
@@ -45,6 +45,7 @@ export default function PolicyList({ policies, onRenew }: Props) {
                     <button
                       type="button"
                       className="btn btn-primary btn-sm"
+                      data-cy="renew"
                       disabled={renewed}
                       onClick={() => onRenew(p.policyNo)}
                     >
