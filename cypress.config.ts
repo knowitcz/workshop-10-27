@@ -4,6 +4,7 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:5173',
     supportFile: 'cypress/support/e2e.ts',
+    testIsolation: false,
     specPattern: 'cypress/e2e/**/*.cy.ts',
     video: false,
     screenshotOnRunFailure: false,
