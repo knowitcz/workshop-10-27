@@ -11,6 +11,21 @@ export default defineConfig({
     viewportWidth: 1280,
     viewportHeight: 900,
   },
+  component: {
+    devServer: {
+      framework: 'react',
+      bundler: 'vite',
+      // The app's vite config pins :5173 with strictPort. Component tests run
+      // their own server and must not collide with a running `npm run dev`.
+      viteConfig: {
+        server: { port: 0, strictPort: false },
+      },
+    },
+    specPattern: 'cypress/components/**/*.cy.tsx',
+    supportFile: 'cypress/support/component.tsx',
+    video: false,
+    screenshotOnRunFailure: false,
+  },
   reporter: 'mochawesome',
   reporterOptions: {
     reportDir: 'reports/mochawesome',
