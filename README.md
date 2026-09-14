@@ -35,6 +35,8 @@ but do not affect the premium.
 
 ```
 npm run test:unit    # Vitest, the domain rules
+npm run test:e2e     # Cypress end-to-end tests; starts the dev server itself
+npm run cy:open      # Cypress in a browser, interactive (run npm run dev first)
 ```
 
 ## Layout

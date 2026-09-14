@@ -19,10 +19,12 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "types": [
-      "vitest/globals"
+      "vitest/globals",
+      "cypress"
     ]
   },
   "include": [
-    "src"
+    "src",
+    "cypress"
   ]
 }
