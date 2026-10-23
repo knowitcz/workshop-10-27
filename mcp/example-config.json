@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "policy-renewal-tests": {
+      "command": "npx",
+      "args": ["tsx", "mcp/server.ts"],
+      "cwd": "/absolute/path/to/workshop-repo"
+    }
+  }
+}

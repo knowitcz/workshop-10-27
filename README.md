@@ -40,6 +40,31 @@ npm run test:component   # Cypress component tests; no dev server needed
 npm run cy:open          # Cypress in a browser, interactive (run npm run dev first)
 ```
 
+## MCP server
+
+`mcp/` holds an MCP server that lets an AI agent run this repository's tests.
+It brings new dependencies, so run `npm ci` after pulling it.
+
+To use it from Claude Code, put this in `.mcp.json` in the repository root
+(the file is in `.gitignore`, so it stays on your machine):
+
+```json
+{
+  "mcpServers": {
+    "policy-renewal-tests": {
+      "command": "npx",
+      "args": ["tsx", "mcp/server.ts"]
+    }
+  }
+}
+```
+
+Or let the CLI add it: `claude mcp add policy-renewal-tests -- npx tsx mcp/server.ts`.
+Start Claude Code in the repository root and check the connection with `/mcp`.
+
+Without an agent, `node scripts/mcp-probe.mjs` lists the tools. Details are in
+[mcp/README.md](mcp/README.md).
+
 ## Layout
 
 ```
