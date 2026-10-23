@@ -23,7 +23,8 @@ describe('Renewal flow', () => {
   function renewPolicy() {
     openPolicyToRenew();
     calculator.calculate();
-    calculator.renewPolicy();
+    calculator.continueToConfirmation();
+    cy.get('[data-cy=confirm]').click();
   }
 
   it('shows policy number POL-1002 in the list', () => {
@@ -153,7 +154,8 @@ describe('Renewal flow', () => {
     calculator.calculate();
 
     // When
-    calculator.renewPolicy();
+    calculator.continueToConfirmation();
+    cy.get('[data-cy=confirm]').click();
 
     // Then
     policyList.rows().should('have.length', 5);

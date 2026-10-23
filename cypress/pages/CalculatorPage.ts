@@ -76,8 +76,8 @@ export class CalculatorPage {
     return this;
   }
 
-  renewPolicy() {
-    cy.get('[data-cy=renew-policy]').click();
+  continueToConfirmation() {
+    cy.get('[data-cy=continue]').click();
     return this;
   }
 
