@@ -2,9 +2,9 @@ import { coverageAmount, formatCZK } from '../domain/calc';
 import { isQuoteValid, quoteDaysLeft } from '../domain/quote';
 import { daysUntil, isExpiring, QUOTE_LOCK_DAYS } from '../domain/renewal';
 import { Quote } from '../domain/types';
-import { markRenewed } from '../state/renewals';
 
 interface Props {
+  quote: Quote | null;
   today: Date;
   onConfirmed: () => void;
 }
@@ -17,35 +17,16 @@ const COUNTRIES = {
   PL: 'Poland',
 };
 
-export default function QuoteSummary({ today, onConfirmed }: Props) {
-  const raw = sessionStorage.getItem('renewalQuote');
-
-  if (!raw) {
+export default function QuoteSummary({ quote, today, onConfirmed }: Props) {
+  if (!quote) {
     return <p data-cy="no-quote">There is no quote to confirm. Go back and calculate one.</p>;
   }
-
-  const stored = JSON.parse(raw);
-  const quote: Quote = {
-    ...stored,
-    issuedAt: new Date(stored.issuedAt),
-    policy: {
-      ...stored.policy,
-      policyStart: new Date(stored.policy.policyStart),
-      renewalDate: new Date(stored.policy.renewalDate),
-    },
-  };
 
   const { policy } = quote;
   const expiring = isExpiring(policy.renewalDate, today);
   const daysLeft = daysUntil(policy.renewalDate, today);
   const valid = isQuoteValid(quote.issuedAt, today);
   const quoteDays = quoteDaysLeft(quote.issuedAt, today);
-
-  function confirm() {
-    markRenewed(policy.policyNo);
-    sessionStorage.removeItem('renewalQuote');
-    onConfirmed();
-  }
 
   return (
     <>
@@ -116,7 +97,7 @@ export default function QuoteSummary({ today, onConfirmed }: Props) {
           className="btn btn-primary"
           data-cy="confirm"
           disabled={!valid}
-          onClick={confirm}
+          onClick={onConfirmed}
         >
           Confirm renewal
         </button>

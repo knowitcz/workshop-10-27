@@ -1,0 +1,129 @@
+From 86fbca38f9459c68434c266514885bb0f3f49ebb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Mat=C3=BA=C5=A1=20=C5=BDdansk=C3=BD?=
+ <matuszdansky@gmail.com>
+Date: Fri, 23 Oct 2026 09:48:00 +0200
+Subject: [PATCH] dev: pass the quote as a prop
+
+---
+ src/components/QuoteSummary.tsx | 27 ++++-----------------------
+ src/screens/Confirmation.tsx    | 31 ++++++++++++++++++++++++++++++-
+ 2 files changed, 34 insertions(+), 24 deletions(-)
+
+diff --git a/src/components/QuoteSummary.tsx b/src/components/QuoteSummary.tsx
+index 38d790e..ac65f3a 100644
+--- a/src/components/QuoteSummary.tsx
++++ b/src/components/QuoteSummary.tsx
+@@ -2,9 +2,9 @@ import { coverageAmount, formatCZK } from '../domain/calc';
+ import { isQuoteValid, quoteDaysLeft } from '../domain/quote';
+ import { daysUntil, isExpiring, QUOTE_LOCK_DAYS } from '../domain/renewal';
+ import { Quote } from '../domain/types';
+-import { markRenewed } from '../state/renewals';
+ 
+ interface Props {
++  quote: Quote | null;
+   today: Date;
+   onConfirmed: () => void;
+ }
+@@ -17,36 +17,17 @@ const COUNTRIES = {
+   PL: 'Poland',
+ };
+ 
+-export default function QuoteSummary({ today, onConfirmed }: Props) {
+-  const raw = sessionStorage.getItem('renewalQuote');
+-
+-  if (!raw) {
++export default function QuoteSummary({ quote, today, onConfirmed }: Props) {
++  if (!quote) {
+     return <p data-cy="no-quote">There is no quote to confirm. Go back and calculate one.</p>;
+   }
+ 
+-  const stored = JSON.parse(raw);
+-  const quote: Quote = {
+-    ...stored,
+-    issuedAt: new Date(stored.issuedAt),
+-    policy: {
+-      ...stored.policy,
+-      policyStart: new Date(stored.policy.policyStart),
+-      renewalDate: new Date(stored.policy.renewalDate),
+-    },
+-  };
+-
+   const { policy } = quote;
+   const expiring = isExpiring(policy.renewalDate, today);
+   const daysLeft = daysUntil(policy.renewalDate, today);
+   const valid = isQuoteValid(quote.issuedAt, today);
+   const quoteDays = quoteDaysLeft(quote.issuedAt, today);
+ 
+-  function confirm() {
+-    markRenewed(policy.policyNo);
+-    sessionStorage.removeItem('renewalQuote');
+-    onConfirmed();
+-  }
+-
+   return (
+     <>
+       <h2 className="section-label" data-cy="section-label">Policyholder</h2>
+@@ -116,7 +97,7 @@ export default function QuoteSummary({ today, onConfirmed }: Props) {
+           className="btn btn-primary"
+           data-cy="confirm"
+           disabled={!valid}
+-          onClick={confirm}
++          onClick={onConfirmed}
+         >
+           Confirm renewal
+         </button>
+diff --git a/src/screens/Confirmation.tsx b/src/screens/Confirmation.tsx
+index ee468b4..f6e7aaa 100644
+--- a/src/screens/Confirmation.tsx
++++ b/src/screens/Confirmation.tsx
+@@ -1,4 +1,6 @@
+ import QuoteSummary from '../components/QuoteSummary';
++import { Quote } from '../domain/types';
++import { markRenewed } from '../state/renewals';
+ 
+ interface Props {
+   today: Date;
+@@ -6,7 +8,34 @@ interface Props {
+   onBack: () => void;
+ }
+ 
++const QUOTE_KEY = 'renewalQuote';
++
++/** The quote the calculator stored, with its dates turned back into dates. */
++function readStoredQuote(): Quote | null {
++  const raw = sessionStorage.getItem(QUOTE_KEY);
++  if (!raw) return null;
++
++  const stored = JSON.parse(raw);
++  return {
++    ...stored,
++    issuedAt: new Date(stored.issuedAt),
++    policy: {
++      ...stored.policy,
++      policyStart: new Date(stored.policy.policyStart),
++      renewalDate: new Date(stored.policy.renewalDate),
++    },
++  };
++}
++
+ export default function Confirmation({ today, onDone, onBack }: Props) {
++  const quote = readStoredQuote();
++
++  function confirm() {
++    markRenewed(quote.policy.policyNo);
++    sessionStorage.removeItem(QUOTE_KEY);
++    onDone();
++  }
++
+   return (
+     <div>
+       <div className="banner">
+@@ -15,7 +44,7 @@ export default function Confirmation({ today, onDone, onBack }: Props) {
+       </div>
+ 
+       <div className="card confirmation" data-cy="confirmation">
+-        <QuoteSummary today={today} onConfirmed={onDone} />
++        <QuoteSummary quote={quote} today={today} onConfirmed={confirm} />
+ 
+         <div className="actions">
+           <button type="button" className="btn btn-secondary" data-cy="confirm-back" onClick={onBack}>
