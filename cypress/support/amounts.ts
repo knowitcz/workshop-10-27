@@ -49,6 +49,10 @@ export const RENEWAL_PREMIUM_BRNO_LOYAL = '8 550 CZK';
 /** 248 000 × 5 % × 1.00 Prague × 1.00 no claims × 0.90 six years */
 export const RENEWAL_PREMIUM_PRAGUE_LOYAL = '11 160 CZK';
 
+// ---------- policyholders ----------
+/** The holder of the expiring policy, POL-4821. */
+export const EXPIRING_POLICYHOLDER = 'Jana Nováková';
+
 // ---------- premiums shown in the list ----------
 export const PREMIUM_EXPIRING = '12 400 CZK';
 export const PREMIUM_ACTIVE = '8 150 CZK';
@@ -60,3 +64,11 @@ export const PREMIUM_MANY_CLAIMS = '21 300 CZK';
 export const EXPIRING_IN_DAYS = 3;
 export const MONTHS_AWAY_IN_DAYS = 200;
 export const QUOTE_LOCK_NOTICE = 'locked for 7 days';
+
+// ---------- how long a quote can be confirmed ----------
+/** Issued today: the whole 7-day lock is left. */
+export const QUOTE_VALID_ON_ISSUE = 'can be confirmed for 7 more days';
+/** Issued 7 days ago: the last day the lock holds. */
+export const QUOTE_VALID_LAST_DAY = 'can be confirmed until the end of today';
+export const QUOTE_EXPIRED = 'This quote has expired';
+export const NO_QUOTE = 'There is no quote to confirm';

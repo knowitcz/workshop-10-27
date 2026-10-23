@@ -1,6 +1,7 @@
 import { ACTIVE_POLICY, EXPIRING_POLICY, MANY_CLAIMS_POLICY, RENEWED_POLICY } from '../builders/policy';
 import { policyList } from '../pages/PolicyListPage';
 import { calculator } from '../pages/CalculatorPage';
+import { confirmation } from '../pages/ConfirmationPage';
 import {
   CHOSEN_COVERAGE,
   CHOSEN_COVERAGE_PCT,
@@ -24,7 +25,7 @@ describe('Renewal flow', () => {
     openPolicyToRenew();
     calculator.calculate();
     calculator.continueToConfirmation();
-    cy.get('[data-cy=confirm]').click();
+    confirmation.confirm();
   }
 
   it('shows policy number POL-1002 in the list', () => {
@@ -155,7 +156,7 @@ describe('Renewal flow', () => {
 
     // When
     calculator.continueToConfirmation();
-    cy.get('[data-cy=confirm]').click();
+    confirmation.confirm();
 
     // Then
     policyList.rows().should('have.length', 5);

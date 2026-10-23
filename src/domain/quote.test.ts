@@ -12,6 +12,10 @@ describe('quoteDaysLeft', () => {
   it('counts down as the days pass', () => {
     expect(quoteDaysLeft(ISSUED, addDays(ISSUED, 3))).toBe(4);
   });
+
+  it('is 0 on the last locked day', () => {
+    expect(quoteDaysLeft(ISSUED, addDays(ISSUED, 7))).toBe(0);
+  });
 });
 
 describe('isQuoteValid', () => {
@@ -21,5 +25,17 @@ describe('isQuoteValid', () => {
 
   it('is valid a few days later', () => {
     expect(isQuoteValid(ISSUED, addDays(ISSUED, 3))).toBe(true);
+  });
+
+  it('is still valid on the last locked day', () => {
+    expect(isQuoteValid(ISSUED, addDays(ISSUED, 7))).toBe(true);
+  });
+
+  it('has expired the day after the lock runs out', () => {
+    expect(isQuoteValid(ISSUED, addDays(ISSUED, 8))).toBe(false);
+  });
+
+  it('has expired long after the lock runs out', () => {
+    expect(isQuoteValid(ISSUED, addDays(ISSUED, 30))).toBe(false);
   });
 });
