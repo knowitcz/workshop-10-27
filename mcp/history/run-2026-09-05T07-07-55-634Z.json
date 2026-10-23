@@ -1,0 +1,629 @@
+{
+  "id": "2026-09-05T07-07-55-634Z",
+  "startedAt": "2026-09-05T07:07:55.634Z",
+  "durationMs": 47432,
+  "passed": 102,
+  "failed": 1,
+  "pending": 0,
+  "tests": [
+    {
+      "fullTitle": "Calculator form reports two errors on an empty form",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 590
+    },
+    {
+      "fullTitle": "Calculator form reports a missing policyholder name",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 498
+    },
+    {
+      "fullTitle": "Calculator form reports a missing age",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 492
+    },
+    {
+      "fullTitle": "Calculator form does not show a result when the form fails validation",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 549
+    },
+    {
+      "fullTitle": "Calculator form calculates the premium for a policy with no previous claims",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 667
+    },
+    {
+      "fullTitle": "Calculator form shows the policy number in the result",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 464
+    },
+    {
+      "fullTitle": "Calculator form shows the number of previous claims in the result",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 522
+    },
+    {
+      "fullTitle": "Calculator form shows the locked-offer notice for a policy due for renewal",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 561
+    },
+    {
+      "fullTitle": "Calculator form adds 15 % to the premium for one previous claim",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 270
+    },
+    {
+      "fullTitle": "Calculator form hides the result after the form is reset",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 528
+    },
+    {
+      "fullTitle": "Calculator form restores the age from the policy after the form is reset",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 567
+    },
+    {
+      "fullTitle": "Calculator form restores the previous claims from the policy after the form is reset",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 486
+    },
+    {
+      "fullTitle": "Calculator form returns coverage to 50 % after the form is reset",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 334
+    },
+    {
+      "fullTitle": "Calculator form scales the premium with the chosen coverage",
+      "file": "cypress/e2e/calculator-form.cy.ts",
+      "state": "passed",
+      "durationMs": 520
+    },
+    {
+      "fullTitle": "Coverage slider shows the chosen coverage percentage after dragging the slider",
+      "file": "cypress/e2e/calculator-slider.cy.ts",
+      "state": "passed",
+      "durationMs": 457
+    },
+    {
+      "fullTitle": "Coverage slider converts coverage into an amount in crowns",
+      "file": "cypress/e2e/calculator-slider.cy.ts",
+      "state": "passed",
+      "durationMs": 225
+    },
+    {
+      "fullTitle": "Coverage slider sets coverage to 0 % at the left end of the slider",
+      "file": "cypress/e2e/calculator-slider.cy.ts",
+      "state": "passed",
+      "durationMs": 164
+    },
+    {
+      "fullTitle": "Coverage slider shows no coverage amount at the left end of the slider",
+      "file": "cypress/e2e/calculator-slider.cy.ts",
+      "state": "passed",
+      "durationMs": 183
+    },
+    {
+      "fullTitle": "Coverage slider sets coverage to 100 % at the right end of the slider",
+      "file": "cypress/e2e/calculator-slider.cy.ts",
+      "state": "passed",
+      "durationMs": 180
+    },
+    {
+      "fullTitle": "Coverage slider shows the full sum insured at 100 % coverage",
+      "file": "cypress/e2e/calculator-slider.cy.ts",
+      "state": "passed",
+      "durationMs": 224
+    },
+    {
+      "fullTitle": "Coverage slider carries the chosen coverage percentage into the result",
+      "file": "cypress/e2e/calculator-slider.cy.ts",
+      "state": "failed",
+      "durationMs": 580,
+      "error": "AssertionError: Timed out retrying after 4000ms: expected '<div>' to contain '62 %'"
+    },
+    {
+      "fullTitle": "Coverage slider carries the coverage amount into the result",
+      "file": "cypress/e2e/calculator-slider.cy.ts",
+      "state": "passed",
+      "durationMs": 392
+    },
+    {
+      "fullTitle": "Coverage slider calculates the premium at the chosen 62 % coverage",
+      "file": "cypress/e2e/calculator-slider.cy.ts",
+      "state": "passed",
+      "durationMs": 585
+    },
+    {
+      "fullTitle": "Confirmation screen shows the renewal confirmation heading",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 934
+    },
+    {
+      "fullTitle": "Confirmation screen shows the policyholder name on the confirmation",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 640
+    },
+    {
+      "fullTitle": "Confirmation screen shows the policyholder age on the confirmation",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 775
+    },
+    {
+      "fullTitle": "Confirmation screen shows the country and region on the confirmation",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 704
+    },
+    {
+      "fullTitle": "Confirmation screen shows the policy number on the confirmation",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 623
+    },
+    {
+      "fullTitle": "Confirmation screen shows the chosen coverage percentage on the confirmation",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 489
+    },
+    {
+      "fullTitle": "Confirmation screen shows the coverage amount on the confirmation",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 664
+    },
+    {
+      "fullTitle": "Confirmation screen shows the renewal premium on the confirmation",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 549
+    },
+    {
+      "fullTitle": "Confirmation screen shows the locked-offer notice for a policy due for renewal",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 776
+    },
+    {
+      "fullTitle": "Confirmation screen says the quote can be confirmed for the whole 7-day lock",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 588
+    },
+    {
+      "fullTitle": "Confirmation screen returns to the calculator after clicking Back",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 798
+    },
+    {
+      "fullTitle": "Confirmation screen does not complete the renewal until the user confirms it",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 986
+    },
+    {
+      "fullTitle": "Confirmation screen renews the policy after confirmation",
+      "file": "cypress/e2e/confirmation.cy.ts",
+      "state": "passed",
+      "durationMs": 659
+    },
+    {
+      "fullTitle": "Policy list shows the application name in the header",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 230
+    },
+    {
+      "fullTitle": "Policy list shows the policy list section",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 86
+    },
+    {
+      "fullTitle": "Policy list shows a table with five columns",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 109
+    },
+    {
+      "fullTitle": "Policy list shows the number of the policy due for renewal",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 74
+    },
+    {
+      "fullTitle": "Policy list shows the policyholder name for a policy due for renewal",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 79
+    },
+    {
+      "fullTitle": "Policy list shows the premium for a policy due for renewal",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 86
+    },
+    {
+      "fullTitle": "Policy list shows the number of the policy with three claims",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 70
+    },
+    {
+      "fullTitle": "Policy list shows the premium for a policy with three claims",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 73
+    },
+    {
+      "fullTitle": "Policy list shows the Expiring status for a policy due for renewal",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 110
+    },
+    {
+      "fullTitle": "Policy list shows the Active status for an active policy",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 69
+    },
+    {
+      "fullTitle": "Policy list shows the Renewed status for an already renewed policy",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 79
+    },
+    {
+      "fullTitle": "Policy list disables the Renew button for an already renewed policy",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 77
+    },
+    {
+      "fullTitle": "Policy list enables the Renew button for a policy due for renewal",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 87
+    },
+    {
+      "fullTitle": "Policy list enables the Renew button for an active policy",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 63
+    },
+    {
+      "fullTitle": "Policy list formats the premium with a space between thousands",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 109
+    },
+    {
+      "fullTitle": "Policy list marks a policy due for renewal with the expiring badge",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 82
+    },
+    {
+      "fullTitle": "Policy list marks a renewed policy with the renewed badge",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 67
+    },
+    {
+      "fullTitle": "Policy list shows a status badge for every policy",
+      "file": "cypress/e2e/policy-list.cy.ts",
+      "state": "passed",
+      "durationMs": 86
+    },
+    {
+      "fullTitle": "Navigating to the calculator opens the calculator for the selected policy",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 336
+    },
+    {
+      "fullTitle": "Navigating to the calculator prefills the policyholder name from the policy",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 134
+    },
+    {
+      "fullTitle": "Navigating to the calculator prefills the policyholder age from the policy",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 142
+    },
+    {
+      "fullTitle": "Navigating to the calculator prefills the region from the policy",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 138
+    },
+    {
+      "fullTitle": "Navigating to the calculator prefills the number of previous claims from the policy",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 178
+    },
+    {
+      "fullTitle": "Navigating to the calculator returns to the policy list after clicking Back",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 222
+    },
+    {
+      "fullTitle": "Navigating to the calculator shows the policyholder details section",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 204
+    },
+    {
+      "fullTitle": "Navigating to the calculator shows the renewal details section",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 137
+    },
+    {
+      "fullTitle": "Navigating to the calculator shows no premium before calculating",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 184
+    },
+    {
+      "fullTitle": "Navigating to the calculator shows the coverage slider",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 195
+    },
+    {
+      "fullTitle": "Navigating to the calculator sets coverage to the default 50 %",
+      "file": "cypress/e2e/policy-navigation.cy.ts",
+      "state": "passed",
+      "durationMs": 183
+    },
+    {
+      "fullTitle": "Renewal edge cases shows five policies when the server returns the full payload",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 311
+    },
+    {
+      "fullTitle": "Renewal edge cases shows the number of the policy due for renewal when the server returns the full payload",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 204
+    },
+    {
+      "fullTitle": "Renewal edge cases shows the days until renewal for a policy due for renewal",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 252
+    },
+    {
+      "fullTitle": "Renewal edge cases shows how long the offer is valid for a policy due for renewal",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 274
+    },
+    {
+      "fullTitle": "Renewal edge cases calculates the full premium on a policy due for renewal",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 196
+    },
+    {
+      "fullTitle": "Renewal edge cases shows no notice for a policy months away from renewal",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 266
+    },
+    {
+      "fullTitle": "Renewal edge cases calculates the same premium for a policy months away from renewal",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 280
+    },
+    {
+      "fullTitle": "Renewal edge cases prefills three previous claims from the policy",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 201
+    },
+    {
+      "fullTitle": "Renewal edge cases adds 45 % to the premium for three previous claims",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 278
+    },
+    {
+      "fullTitle": "Renewal edge cases shows the 62 % coverage amount in the result",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 327
+    },
+    {
+      "fullTitle": "Renewal edge cases counts three claims also at 62 % coverage",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 248
+    },
+    {
+      "fullTitle": "Renewal edge cases shows no notice for a policy with a renewal date 200 days away",
+      "file": "cypress/e2e/renewal-edge-cases.cy.ts",
+      "state": "passed",
+      "durationMs": 273
+    },
+    {
+      "fullTitle": "Renewal flow shows policy number POL-1002 in the list",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 245
+    },
+    {
+      "fullTitle": "Renewal flow shows the Active status for policy POL-1002",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 88
+    },
+    {
+      "fullTitle": "Renewal flow allows renewing policy POL-1002",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 79
+    },
+    {
+      "fullTitle": "Renewal flow opens the calculator for policy POL-1002",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 173
+    },
+    {
+      "fullTitle": "Renewal flow prefills the policyholder name of policy POL-1002",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 220
+    },
+    {
+      "fullTitle": "Renewal flow prefills the policyholder age of policy POL-1002",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 210
+    },
+    {
+      "fullTitle": "Renewal flow prefills the region of policy POL-1002",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 215
+    },
+    {
+      "fullTitle": "Renewal flow prefills zero claims for policy POL-1002",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 179
+    },
+    {
+      "fullTitle": "Renewal flow calculates the premium with the loyalty discount for a policy in Brno",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 222
+    },
+    {
+      "fullTitle": "Renewal flow shows policy number POL-1002 in the result",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 307
+    },
+    {
+      "fullTitle": "Renewal flow shows the default 50 % coverage in the result",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 251
+    },
+    {
+      "fullTitle": "Renewal flow shows the default coverage amount in the result",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 279
+    },
+    {
+      "fullTitle": "Renewal flow shows zero claims in the result",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 324
+    },
+    {
+      "fullTitle": "Renewal flow shows no notice for a policy months away from renewal",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 217
+    },
+    {
+      "fullTitle": "Renewal flow returns to the policy list after the renewal is confirmed",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 397
+    },
+    {
+      "fullTitle": "Renewal flow shows the Renewed status after policy POL-1002 is renewed",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 455
+    },
+    {
+      "fullTitle": "Renewal flow disables the Renew button after policy POL-1002 is renewed",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 508
+    },
+    {
+      "fullTitle": "Renewal flow disables the Renew button for a policy already renewed in the data",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 91
+    },
+    {
+      "fullTitle": "Renewal flow enables the Renew button for a policy due for renewal",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 97
+    },
+    {
+      "fullTitle": "Renewal flow carries the chosen 62 % coverage into the result for policy POL-7781",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 546
+    },
+    {
+      "fullTitle": "Renewal flow carries the coverage amount into the result for policy POL-7781",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 632
+    },
+    {
+      "fullTitle": "Renewal flow calculates the premium with the loyalty discount for policy POL-7781",
+      "file": "cypress/e2e/renewal-journey.cy.ts",
+      "state": "passed",
+      "durationMs": 455
+    },
+    {
+      "fullTitle": "Loyalty charges the full premium on a policy held under five years",
+      "file": "cypress/e2e/renewal-loyalty.cy.ts",
+      "state": "passed",
+      "durationMs": 410
+    },
+    {
+      "fullTitle": "Loyalty gives a 10 % loyalty discount on a policy held five years or more",
+      "file": "cypress/e2e/renewal-loyalty.cy.ts",
+      "state": "passed",
+      "durationMs": 313
+    },
+    {
+      "fullTitle": "Loyalty gives no more than 10 % on a policy held over ten years",
+      "file": "cypress/e2e/renewal-loyalty.cy.ts",
+      "state": "passed",
+      "durationMs": 245
+    },
+    {
+      "fullTitle": "Loyalty gives the loyalty discount also just past the five-year mark",
+      "file": "cypress/e2e/renewal-loyalty.cy.ts",
+      "state": "passed",
+      "durationMs": 326
+    }
+  ]
+}
