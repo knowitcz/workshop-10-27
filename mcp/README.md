@@ -35,7 +35,7 @@ node scripts/mcp-probe.mjs run_e2e_suite   # call one
 
 | Tool | What it returns |
 |---|---|
-| `run_e2e_suite` | how many tests passed, how many failed, how long it took |
+| `run_e2e_suite` | counts, plus every failure's test name, spec file, assertion message and code frame |
 
 ## A note on the dev server
 
