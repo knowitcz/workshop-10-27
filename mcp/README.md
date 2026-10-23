@@ -39,6 +39,8 @@ node scripts/mcp-probe.mjs run_e2e_suite   # call one
 | `run_e2e_suite` | counts, plus every failure's test name, spec file, assertion message and code frame |
 | `run_test_file` | the same, for every test in one spec file |
 | `check_environment` | dev server, Node/npm/Cypress versions, whether anything would make a run fail |
+| `get_run_history` | previous runs: when, how long, how many passed and failed |
+| `get_metrics` | flaky tests, regressed tests, slowest tests, most-failed tests |
 
 ### Listing the tests
 
@@ -70,6 +72,25 @@ no `@cypress/grep` (which does not resolve against Cypress 13 without
 `--legacy-peer-deps` anyway). The file is the unit of selection on purpose: it
 needs no machinery, and it is already the difference between **6.8 s** for
 `policy-list.cy.ts` and about **33 s** for the suite.
+
+## Run history
+
+`mcp/history/` ships with 14 runs so `get_run_history` and `get_metrics` return
+something interesting on a machine that has run the suite once. Every run made
+through `run_e2e_suite` is appended there.
+
+Regenerate the shipped history with `node scripts/seed-history.mjs` — it seeds
+from the mochawesome reports of your last e2e run, so the test names stay
+genuine. The file format is in `history/README.md`.
+
+### Flaky vs regressed
+
+`get_metrics` keeps these apart, because they call for opposite responses:
+
+- **flaky** — failures scattered through the history. Find the race.
+- **regressed** — failures in one unbroken stretch. Find the commit.
+
+Lumping both under "flaky" is the usual mistake and it hides the difference.
 
 ## A note on the dev server
 

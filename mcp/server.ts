@@ -2,13 +2,14 @@
 /**
  * MCP server for the workshop app.
  *
- * Four tools: list the tests, run the whole suite, run one spec file, and
- * check the environment.
+ * Six tools: list the tests, run the whole suite, run one spec file, check
+ * the environment, read the run history, and derive metrics from it.
  */
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import { checkEnvironment } from './environment.js';
+import { computeMetrics, listRuns, recordRun } from './history.js';
 import { listSpecs } from './specs.js';
 import { runSuite } from './suite.js';
 
@@ -71,7 +72,9 @@ server.registerTool(
     inputSchema: {},
   },
   async () => {
+    const startedAt = new Date();
     const run = await runSuite();
+    recordRun(run, startedAt);
 
     return json({
       passed: run.passed,
@@ -132,6 +135,47 @@ server.registerTool(
     inputSchema: {},
   },
   async () => json(await checkEnvironment())
+);
+
+server.registerTool(
+  'get_run_history',
+  {
+    title: 'Get run history',
+    description:
+      'Returns previous suite runs, newest last: when each ran, how long it took, and how many tests passed and failed.',
+    inputSchema: {
+      limit: z.number().int().positive().optional().describe('How many runs to return (default 20)'),
+      include_tests: z
+        .boolean()
+        .optional()
+        .describe('Include each run’s per-test results (verbose)'),
+    },
+  },
+  async ({ limit = 20, include_tests = false }) => {
+    const runs = listRuns().slice(-limit);
+    return json(
+      runs.map((run) => ({
+        id: run.id,
+        started_at: run.startedAt,
+        duration_ms: run.durationMs,
+        passed: run.passed,
+        failed: run.failed,
+        pending: run.pending,
+        ...(include_tests ? { tests: run.tests } : {}),
+      }))
+    );
+  }
+);
+
+server.registerTool(
+  'get_metrics',
+  {
+    title: 'Get suite metrics',
+    description:
+      'Derives metrics from the run history: which tests are flaky (have both passed and failed), which are slowest on average, and which fail most often.',
+    inputSchema: {},
+  },
+  async () => json(computeMetrics(listRuns()))
 );
 
 const transport = new StdioServerTransport();
