@@ -1,73 +1,73 @@
 import type { PolicyRecord } from '../../src/domain/types';
 
-export const selectors = {
-  title: '.banner h1',
-  sectionLabel: '.section-label',
-  header: 'thead th',
-  row: '.policy-row',
-  policyNo: '.polno',
-  status: '.status',
-  premium: '.amount',
-  badge: '.badge',
-  renewButton: 'button',
-};
-
+/**
+ * One row of the policy table.
+ *
+ * The constructor takes a **getter**, not a chainable. A stored
+ * `Cypress.Chainable` is a one-shot: it resolves once and is not re-queried, so
+ * two calls on the same instance would operate on a stale subject — and after
+ * the row re-renders (a renewal changes the status and disables the button)
+ * the stale subject is detached from the DOM. Calling `this.root()` runs a
+ * fresh `cy.contains` every time. This is not a style preference.
+ */
 export class PolicyRow {
-  row: Cypress.Chainable;
-
-  constructor(index: number) {
-    this.row = cy.get(selectors.row).eq(index);
-  }
+  constructor(private root: () => Cypress.Chainable) {}
 
   policyNo() {
-    return this.row.find(selectors.policyNo);
+    return this.root().find('[data-cy=policy-no]');
+  }
+
+  policyholder() {
+    return this.root().find('[data-cy=policyholder]');
   }
 
   status() {
-    return this.row.find(selectors.status);
+    return this.root().find('[data-cy=status]');
   }
 
   premium() {
-    return this.row.find(selectors.premium);
+    return this.root().find('[data-cy=premium]');
   }
 
   renewButton() {
-    return this.row.find(selectors.renewButton);
+    return this.root().find('[data-cy=renew]');
+  }
+
+  renew() {
+    this.renewButton().click();
   }
 }
 
-class PolicyListPage {
-  selectors = selectors;
-
-  open(policies?: PolicyRecord[]) {
-    const response = policies ? { body: policies } : { fixture: 'policies.json' };
-    cy.intercept('GET', '/data/policies.json', response).as('policies');
-    cy.visit('/');
-    cy.wait('@policies');
-    cy.wait(2000);
-    cy.get(selectors.row).should('have.length', 5);
+export class PolicyListPage {
+  visit(overrides: Record<string, Partial<PolicyRecord>> = {}) {
+    cy.openPolicyList(overrides);
+    return this;
   }
 
-  row(index: number) {
-    return new PolicyRow(index);
+  /** Find a policy by its number. Never by position. */
+  row(policyNo: string) {
+    return new PolicyRow(() => cy.contains('[data-cy=policy-row]', policyNo));
   }
 
-  renew(index: number) {
-    cy.get(selectors.row).eq(index).find(selectors.renewButton).click();
-    cy.wait(1500);
+  rows() {
+    return cy.get('[data-cy=policy-row]');
   }
 
-  verifyRowCount(count: number) {
-    cy.get(selectors.row).should('have.length', count);
+  title() {
+    return cy.get('[data-cy=app-title]');
   }
 
-  verifyStatus(index: number, status: string) {
-    cy.get(selectors.row).eq(index).find(selectors.status).should('contain', status);
+  sectionLabel() {
+    return cy.get('[data-cy=section-label]');
   }
 
-  verifyPremium(index: number, premium: string) {
-    cy.get(selectors.row).eq(index).find(selectors.premium).should('contain', premium);
+  columnHeaders() {
+    return cy.get('thead th');
+  }
+
+  statuses() {
+    return cy.get('[data-cy=status]');
   }
 }
 
-export default new PolicyListPage();
+export const policyList = new PolicyListPage();

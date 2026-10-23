@@ -11,12 +11,12 @@ export default function PolicyList({ policies, onRenew }: Props) {
   return (
     <div>
       <div className="banner">
-        <h1>Policy Renewal</h1>
+        <h1 data-cy="app-title">Policy Renewal</h1>
         <p>Select a policy to renew.</p>
       </div>
 
       <div className="card">
-        <h2 className="section-label">Policies</h2>
+        <h2 className="section-label" data-cy="section-label">Policies</h2>
         <table>
           <thead>
             <tr>
@@ -33,14 +33,14 @@ export default function PolicyList({ policies, onRenew }: Props) {
               const status = renewed ? 'Renewed' : p.status;
               return (
                 <tr className="policy-row" data-cy="policy-row" key={p.policyNo}>
-                  <td className="polno">{p.policyNo}</td>
-                  <td>{p.policyholder}</td>
+                  <td className="polno" data-cy="policy-no">{p.policyNo}</td>
+                  <td data-cy="policyholder">{p.policyholder}</td>
                   <td>
-                    <span className={'badge status ' + status.toLowerCase()}>
+                    <span className={'badge status ' + status.toLowerCase()} data-cy="status">
                       {status}
                     </span>
                   </td>
-                  <td className="amount">{formatCZK(p.premium)}</td>
+                  <td className="amount" data-cy="premium">{formatCZK(p.premium)}</td>
                   <td>
                     <button
                       type="button"

@@ -66,16 +66,16 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
   return (
     <div>
       <div className="banner">
-        <h1>Renew {policy.policyNo}</h1>
+        <h1 data-cy="calculator-title">Renew {policy.policyNo}</h1>
         <p>Review the renewal details and calculate the new premium.</p>
       </div>
 
       <form className="card" noValidate autoComplete="off" onSubmit={onSubmit} onReset={onReset}>
-        <button type="button" className="link-back" onClick={onBack}>
+        <button type="button" className="link-back" data-cy="back" onClick={onBack}>
           ← Back to policies
         </button>
 
-        <h2 className="section-label">Policyholder</h2>
+        <h2 className="section-label" data-cy="section-label">Policyholder</h2>
 
         <div className="field">
           <label htmlFor="policyholderName">Policyholder name</label>
@@ -109,6 +109,7 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
             <select
               id="country"
               name="country"
+              data-cy="country"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
             >
@@ -125,6 +126,7 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
             <select
               id="region"
               name="region"
+              data-cy="region"
               value={region}
               onChange={(e) => setRegion(e.target.value)}
             >
@@ -137,7 +139,7 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
           </div>
         </div>
 
-        <h2 className="section-label">Renewal details</h2>
+        <h2 className="section-label" data-cy="section-label">Renewal details</h2>
 
 
         <div className="field">
@@ -178,7 +180,7 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
 
       {premium !== null && (
         <div className="card result">
-          <h2 className="section-label">Calculation result</h2>
+          <h2 className="section-label" data-cy="section-label">Calculation result</h2>
           <dl className="summary">
             <div className="row" data-cy="summary-policy">
               <dt>Policy</dt>

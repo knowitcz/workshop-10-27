@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   addDays,
   daysUntil,
+  EXPIRING_WINDOW_DAYS,
   isExpiring,
   quoteLockedUntil,
   resolvePolicy,
@@ -19,6 +20,17 @@ describe('daysUntil', () => {
   });
 });
 
+describe('daysUntil, around today', () => {
+  it('is negative for a date already past', () => {
+    expect(daysUntil(addDays(TODAY, -1), TODAY)).toBe(-1);
+  });
+
+  it('ignores the time of day', () => {
+    const laterToday = new Date(2025, 4, 12, 23, 30);
+    expect(daysUntil(laterToday, TODAY)).toBe(0);
+  });
+});
+
 describe('isExpiring', () => {
   it('is false for a policy months away', () => {
     expect(isExpiring(addDays(TODAY, 60), TODAY)).toBe(false);
@@ -26,6 +38,32 @@ describe('isExpiring', () => {
 
   it('is true for a policy a few days away', () => {
     expect(isExpiring(addDays(TODAY, 3), TODAY)).toBe(true);
+  });
+
+  it('is true for a policy renewing today', () => {
+    expect(isExpiring(TODAY, TODAY)).toBe(true);
+  });
+
+  it('is false for a policy whose renewal date has passed', () => {
+    expect(isExpiring(addDays(TODAY, -1), TODAY)).toBe(false);
+  });
+});
+
+describe('isExpiring, at the 14-day boundary', () => {
+  it('uses a fourteen-day window', () => {
+    expect(EXPIRING_WINDOW_DAYS).toBe(14);
+  });
+
+  it('is true the day before the window closes', () => {
+    expect(isExpiring(addDays(TODAY, 13), TODAY)).toBe(true);
+  });
+
+  it('is true on the last day inside the window', () => {
+    expect(isExpiring(addDays(TODAY, 14), TODAY)).toBe(true);
+  });
+
+  it('is false on the first day outside the window', () => {
+    expect(isExpiring(addDays(TODAY, 15), TODAY)).toBe(false);
   });
 });
 

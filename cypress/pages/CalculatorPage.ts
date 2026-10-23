@@ -8,6 +8,10 @@ export class CalculatorPage {
   }
 
   // ---------- fields ----------
+  heading() {
+    return cy.get('[data-cy=calculator-title]');
+  }
+
   policyholderName() {
     return cy.get('[data-cy=policyholder-name]');
   }
@@ -16,8 +20,16 @@ export class CalculatorPage {
     return cy.get('[data-cy=age]');
   }
 
+  region() {
+    return cy.get('[data-cy=region]');
+  }
+
   priorClaims() {
     return cy.get('[data-cy=prior-claims]');
+  }
+
+  sectionLabels() {
+    return cy.get('[data-cy=section-label]');
   }
 
   // ---------- coverage ----------
@@ -27,6 +39,10 @@ export class CalculatorPage {
 
   coverageFill() {
     return cy.get('[data-cy=coverage-fill]');
+  }
+
+  slider() {
+    return cy.get('[data-cy=coverage-slider]');
   }
 
   setCoverage(fraction: number) {
@@ -45,6 +61,11 @@ export class CalculatorPage {
     return this;
   }
 
+  clearPolicyholderName() {
+    this.policyholderName().clear();
+    return this;
+  }
+
   calculate() {
     cy.get('[data-cy=calculate]').click();
     return this;
@@ -52,6 +73,16 @@ export class CalculatorPage {
 
   reset() {
     cy.get('[data-cy=reset]').click();
+    return this;
+  }
+
+  renewPolicy() {
+    cy.get('[data-cy=renew-policy]').click();
+    return this;
+  }
+
+  back() {
+    cy.get('[data-cy=back]').click();
     return this;
   }
 

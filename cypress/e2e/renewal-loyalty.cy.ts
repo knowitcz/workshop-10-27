@@ -1,51 +1,60 @@
-let policies;
+import { EXPIRING_POLICY } from '../builders/policy';
+import { calculator } from '../pages/CalculatorPage';
+import {
+  RENEWAL_PREMIUM_LONG_STANDING,
+  RENEWAL_PREMIUM_NO_CLAIMS,
+} from '../support/amounts';
 
 describe('Loyalty', () => {
-  before(() => {
-    cy.fixture('policy.json').then((data) => {
-      policies = data;
-    });
-  });
-
-  function open(data) {
-    cy.intercept('GET', '/data/policies.json', { body: data }).as('policies');
-    cy.visit('/');
-    cy.wait('@policies');
-    cy.wait(2000);
-    cy.get('.policy-row').should('have.length', 5);
-    cy.get('.policy-row').eq(0).find('button').click();
-    cy.wait(1500);
-    cy.get('input[name="policyholderName"]').should('be.visible');
+  // The loyalty discount is what is under test, so everything else that moves
+  // the premium is pinned: no previous claims, Prague.
+  function openCalculatorFor(policyStartYearsAgo: number) {
+    calculator.visit(EXPIRING_POLICY, { policyStartYearsAgo, priorClaims: 0 });
   }
 
-  it('INS-284 under five years', () => {
-    policies[0].policyStartYearsAgo = 2;
-    open(policies);
-    cy.contains('button', 'Calculate premium').click();
-    cy.wait(1500);
-    cy.get('h4').should('contain', '10 000 CZK');
+  it('charges the full premium on a policy held under five years', () => {
+    // Given
+    openCalculatorFor(2);
+
+    // When
+    calculator.calculate();
+
+    // Then
+    calculator.premium().should('contain', RENEWAL_PREMIUM_NO_CLAIMS);
   });
 
-  it('five years or more', () => {
-    policies[0].policyStartYearsAgo = 7;
-    open(policies);
-    cy.contains('button', 'Calculate premium').click();
-    cy.wait(1500);
-    cy.get('h4').should('contain', '9 000 CZK');
+  it('gives a 10 % loyalty discount on a policy held five years or more', () => {
+    // Given
+    openCalculatorFor(7);
+
+    // When
+    calculator.calculate();
+
+    // Then
+    calculator.premium().should('contain', RENEWAL_PREMIUM_LONG_STANDING);
   });
 
-  it('over ten years', () => {
-    policies[0].policyStartYearsAgo = 11;
-    open(policies);
-    cy.contains('button', 'Calculate premium').click();
-    cy.wait(1500);
-    cy.get('h4').should('contain', '9 000 CZK');
+  it('gives no more than 10 % on a policy held over ten years', () => {
+    // Given
+    openCalculatorFor(11);
+
+    // When
+    calculator.calculate();
+
+    // Then
+    calculator.premium().should('contain', RENEWAL_PREMIUM_LONG_STANDING);
   });
 
-  it('test4', () => {
-    open(policies);
-    cy.contains('button', 'Calculate premium').click();
-    cy.wait(1500);
-    cy.get('h4').should('contain', '9 000 CZK');
+  it('gives the loyalty discount also just past the five-year mark', () => {
+    // Given
+    // Not exactly five: the rule reads today's date itself, so the boundary
+    // moves with the clock and cannot be pinned from a test.
+    openCalculatorFor(6);
+
+    // When
+    calculator.calculate();
+
+    // Then
+    calculator.premium().should('contain', RENEWAL_PREMIUM_LONG_STANDING);
   });
 });
