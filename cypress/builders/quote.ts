@@ -3,8 +3,9 @@ import type { Quote } from '../../src/domain/types';
 import { aPolicy } from './policy';
 
 /**
- * A quote as the calculator stores it: the expiring policy, no previous claims,
- * the default 50 % coverage, issued on `today`. Override what the test is about.
+ * A quote as the confirmation screen receives it: the expiring policy, no
+ * previous claims, the default 50 % coverage, issued on `today`. Override what
+ * the test is about.
  */
 export function aQuote(today: Date, overrides: Partial<Quote> = {}): Quote {
   const policy = resolvePolicy(aPolicy({ priorClaims: 0 }), today);
