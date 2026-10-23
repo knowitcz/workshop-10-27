@@ -1,0 +1,385 @@
+From c0e1eb1a81ccc593233361af4d86f78a8ba252d1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Mat=C3=BA=C5=A1=20=C5=BDdansk=C3=BD?=
+ <matuszdansky@gmail.com>
+Date: Fri, 23 Oct 2026 09:24:00 +0200
+Subject: [PATCH] dev: the confirmation screen
+
+---
+ src/App.tsx                     |  23 ++++--
+ src/components/QuoteSummary.tsx | 126 ++++++++++++++++++++++++++++++++
+ src/domain/quote.test.ts        |  25 +++++++
+ src/domain/quote.ts             |  18 +++++
+ src/domain/types.ts             |  14 ++++
+ src/screens/Calculator.tsx      |  26 +++++--
+ src/screens/Confirmation.tsx    |  28 +++++++
+ src/styles.css                  |   3 +-
+ 8 files changed, 251 insertions(+), 12 deletions(-)
+ create mode 100644 src/components/QuoteSummary.tsx
+ create mode 100644 src/domain/quote.test.ts
+ create mode 100644 src/domain/quote.ts
+ create mode 100644 src/screens/Confirmation.tsx
+
+diff --git a/src/App.tsx b/src/App.tsx
+index 068dbc0..1b16407 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
+ import { fetchPolicies } from './api';
+ import { resolvePolicy } from './domain/renewal';
+ import { Policy } from './domain/types';
+-import { markRenewed } from './state/renewals';
+ import Calculator from './screens/Calculator';
++import Confirmation from './screens/Confirmation';
+ import PolicyList from './screens/PolicyList';
+ 
+ export default function App() {
+   const [policies, setPolicies] = useState<Policy[]>([]);
+   const [loading, setLoading] = useState(true);
+   const [selected, setSelected] = useState(null);
++  const [confirming, setConfirming] = useState(false);
+   const today = new Date();
+ 
+   useEffect(() => {
+@@ -31,6 +32,21 @@ export default function App() {
+ 
+   const policy = policies.find((p) => p.policyNo === selected);
+ 
++  if (confirming) {
++    return (
++      <div className="wrap">
++        <Confirmation
++          today={today}
++          onBack={() => setConfirming(false)}
++          onDone={() => {
++            setConfirming(false);
++            setSelected(null);
++          }}
++        />
++      </div>
++    );
++  }
++
+   return (
+     <div className="wrap">
+       {selected === null ? (
+@@ -40,10 +56,7 @@ export default function App() {
+           policy={policy}
+           today={today}
+           onBack={() => setSelected(null)}
+-          onComplete={(policyNo) => {
+-            markRenewed(policyNo);
+-            setSelected(null);
+-          }}
++          onContinue={() => setConfirming(true)}
+         />
+       )}
+     </div>
+diff --git a/src/components/QuoteSummary.tsx b/src/components/QuoteSummary.tsx
+new file mode 100644
+index 0000000..38d790e
+--- /dev/null
++++ b/src/components/QuoteSummary.tsx
+@@ -0,0 +1,126 @@
++import { coverageAmount, formatCZK } from '../domain/calc';
++import { isQuoteValid, quoteDaysLeft } from '../domain/quote';
++import { daysUntil, isExpiring, QUOTE_LOCK_DAYS } from '../domain/renewal';
++import { Quote } from '../domain/types';
++import { markRenewed } from '../state/renewals';
++
++interface Props {
++  today: Date;
++  onConfirmed: () => void;
++}
++
++const COUNTRIES = {
++  CZ: 'Czech Republic',
++  SK: 'Slovakia',
++  DE: 'Germany',
++  AT: 'Austria',
++  PL: 'Poland',
++};
++
++export default function QuoteSummary({ today, onConfirmed }: Props) {
++  const raw = sessionStorage.getItem('renewalQuote');
++
++  if (!raw) {
++    return <p data-cy="no-quote">There is no quote to confirm. Go back and calculate one.</p>;
++  }
++
++  const stored = JSON.parse(raw);
++  const quote: Quote = {
++    ...stored,
++    issuedAt: new Date(stored.issuedAt),
++    policy: {
++      ...stored.policy,
++      policyStart: new Date(stored.policy.policyStart),
++      renewalDate: new Date(stored.policy.renewalDate),
++    },
++  };
++
++  const { policy } = quote;
++  const expiring = isExpiring(policy.renewalDate, today);
++  const daysLeft = daysUntil(policy.renewalDate, today);
++  const valid = isQuoteValid(quote.issuedAt, today);
++  const quoteDays = quoteDaysLeft(quote.issuedAt, today);
++
++  function confirm() {
++    markRenewed(policy.policyNo);
++    sessionStorage.removeItem('renewalQuote');
++    onConfirmed();
++  }
++
++  return (
++    <>
++      <h2 className="section-label" data-cy="section-label">Policyholder</h2>
++      <dl className="summary">
++        <div className="row" data-cy="confirm-name">
++          <dt>Policyholder name</dt>
++          <dd>{quote.policyholderName}</dd>
++        </div>
++        <div className="row" data-cy="confirm-age">
++          <dt>Age</dt>
++          <dd>{quote.age}</dd>
++        </div>
++        <div className="row" data-cy="confirm-region">
++          <dt>Region</dt>
++          <dd>
++            {COUNTRIES[quote.country] || quote.country} — {quote.region}
++          </dd>
++        </div>
++      </dl>
++
++      <h2 className="section-label" data-cy="section-label">Renewal</h2>
++      <dl className="summary">
++        <div className="row" data-cy="confirm-policy">
++          <dt>Policy</dt>
++          <dd>{policy.policyNo}</dd>
++        </div>
++        <div className="row" data-cy="confirm-coverage">
++          <dt>Coverage level</dt>
++          <dd>
++            {quote.coverage} % — {formatCZK(coverageAmount(quote.coverage))}
++          </dd>
++        </div>
++        <div className="row" data-cy="confirm-claims">
++          <dt>Previous claims</dt>
++          <dd>{quote.priorClaims}</dd>
++        </div>
++        <div className="row total">
++          <dt>Renewal premium</dt>
++          <dd>
++            <h4 data-cy="confirm-premium">{formatCZK(quote.premium)}</h4>
++          </dd>
++        </div>
++      </dl>
++
++      {expiring && (
++        <div className="notice" data-cy="confirm-notice">
++          This policy expires in {daysLeft} days. The quote is locked for{' '}
++          {QUOTE_LOCK_DAYS} days.
++        </div>
++      )}
++
++      {valid ? (
++        <p data-cy="quote-validity">
++          {quoteDays === 0
++            ? 'This quote can be confirmed until the end of today.'
++            : `This quote can be confirmed for ${quoteDays} more ${quoteDays === 1 ? 'day' : 'days'}.`}
++        </p>
++      ) : (
++        <div className="notice" data-cy="quote-expired">
++          This quote has expired. Go back and calculate it again.
++        </div>
++      )}
++
++      <div className="actions">
++        <button
++          type="button"
++          className="btn btn-primary"
++          data-cy="confirm"
++          disabled={!valid}
++          onClick={confirm}
++        >
++          Confirm renewal
++        </button>
++      </div>
++    </>
++  );
++}
+diff --git a/src/domain/quote.test.ts b/src/domain/quote.test.ts
+new file mode 100644
+index 0000000..1472161
+--- /dev/null
++++ b/src/domain/quote.test.ts
+@@ -0,0 +1,25 @@
++import { describe, expect, it } from 'vitest';
++import { isQuoteValid, quoteDaysLeft } from './quote';
++import { addDays } from './renewal';
++
++const ISSUED = new Date(2025, 4, 12);
++
++describe('quoteDaysLeft', () => {
++  it('is the whole lock on the day the quote is issued', () => {
++    expect(quoteDaysLeft(ISSUED, ISSUED)).toBe(7);
++  });
++
++  it('counts down as the days pass', () => {
++    expect(quoteDaysLeft(ISSUED, addDays(ISSUED, 3))).toBe(4);
++  });
++});
++
++describe('isQuoteValid', () => {
++  it('is valid on the day it is issued', () => {
++    expect(isQuoteValid(ISSUED, ISSUED)).toBe(true);
++  });
++
++  it('is valid a few days later', () => {
++    expect(isQuoteValid(ISSUED, addDays(ISSUED, 3))).toBe(true);
++  });
++});
+diff --git a/src/domain/quote.ts b/src/domain/quote.ts
+new file mode 100644
+index 0000000..ace8c31
+--- /dev/null
++++ b/src/domain/quote.ts
+@@ -0,0 +1,18 @@
++/**
++ * quote.ts — whether a calculated quote can still be confirmed.
++ *
++ * A quote is locked for QUOTE_LOCK_DAYS from the day it was issued. The last
++ * locked day still counts: a quote issued on the 1st can be confirmed up to and
++ * including the 8th.
++ */
++import { daysUntil, quoteLockedUntil } from './renewal';
++
++/** Whole days left before the lock runs out; 0 on the last day it holds. */
++export function quoteDaysLeft(issuedAt: Date, today: Date): number {
++  return daysUntil(quoteLockedUntil(issuedAt), today);
++}
++
++/** Can a quote issued on `issuedAt` still be confirmed on `today`? */
++export function isQuoteValid(issuedAt: Date, today: Date): boolean {
++  return quoteDaysLeft(issuedAt, today) >= 0;
++}
+diff --git a/src/domain/types.ts b/src/domain/types.ts
+index 9edc2fe..d4551da 100644
+--- a/src/domain/types.ts
++++ b/src/domain/types.ts
+@@ -30,3 +30,17 @@ export interface CalcInput {
+   coverageLevel: number;
+   policyStart: Date;
+ }
++
++/** What the calculator hands to the confirmation screen. */
++export interface Quote {
++  policy: Policy;
++  policyholderName: string;
++  age: number;
++  country: string;
++  region: string;
++  priorClaims: number;
++  coverage: number;
++  premium: number;
++  /** The day the quote was calculated. It can be confirmed for QUOTE_LOCK_DAYS. */
++  issuedAt: Date;
++}
+diff --git a/src/screens/Calculator.tsx b/src/screens/Calculator.tsx
+index 6c7cce9..dd77aa9 100644
+--- a/src/screens/Calculator.tsx
++++ b/src/screens/Calculator.tsx
+@@ -2,16 +2,16 @@ import { useState } from 'react';
+ import CoverageSlider from '../components/CoverageSlider';
+ import { calculatePremium, coverageAmount, formatCZK } from '../domain/calc';
+ import { daysUntil, isExpiring, QUOTE_LOCK_DAYS } from '../domain/renewal';
+-import { Policy } from '../domain/types';
++import { Policy, Quote } from '../domain/types';
+ 
+ interface Props {
+   policy: Policy;
+   today: Date;
+-  onComplete: (policyNo: string) => void;
++  onContinue: () => void;
+   onBack: () => void;
+ }
+ 
+-export default function Calculator({ policy, today, onComplete, onBack }: Props) {
++export default function Calculator({ policy, today, onContinue, onBack }: Props) {
+   const [policyholderName, setPolicyholderName] = useState(policy.policyholder);
+   const [age, setAge] = useState(String(policy.age));
+   const [country, setCountry] = useState(policy.country);
+@@ -210,10 +210,24 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
+             <button
+               type="button"
+               className="btn btn-primary"
+-              data-cy="renew-policy"
+-              onClick={() => onComplete(policy.policyNo)}
++              data-cy="continue"
++              onClick={() => {
++                const quote: Quote = {
++                  policy,
++                  policyholderName,
++                  age: Number(age),
++                  country,
++                  region,
++                  priorClaims: Number(priorClaims),
++                  coverage,
++                  premium,
++                  issuedAt: today,
++                };
++                sessionStorage.setItem('renewalQuote', JSON.stringify(quote));
++                onContinue();
++              }}
+             >
+-              Renew policy
++              Continue
+             </button>
+           </div>
+         </div>
+diff --git a/src/screens/Confirmation.tsx b/src/screens/Confirmation.tsx
+new file mode 100644
+index 0000000..ee468b4
+--- /dev/null
++++ b/src/screens/Confirmation.tsx
+@@ -0,0 +1,28 @@
++import QuoteSummary from '../components/QuoteSummary';
++
++interface Props {
++  today: Date;
++  onDone: () => void;
++  onBack: () => void;
++}
++
++export default function Confirmation({ today, onDone, onBack }: Props) {
++  return (
++    <div>
++      <div className="banner">
++        <h1 data-cy="confirmation-title">Confirm renewal</h1>
++        <p>Check the details before the policy is renewed.</p>
++      </div>
++
++      <div className="card confirmation" data-cy="confirmation">
++        <QuoteSummary today={today} onConfirmed={onDone} />
++
++        <div className="actions">
++          <button type="button" className="btn btn-secondary" data-cy="confirm-back" onClick={onBack}>
++            Back
++          </button>
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/src/styles.css b/src/styles.css
+index 6ee5c48..0633617 100644
+--- a/src/styles.css
++++ b/src/styles.css
+@@ -58,7 +58,8 @@ body {
+   text-transform: uppercase;
+   margin: 0 0 20px;
+ }
+-.section-label + .section-label { margin-top: 34px; }
++.section-label + .section-label,
++.summary + .section-label { margin-top: 34px; }
+ 
+ /* ---------- policy table ---------- */
+ table { width: 100%; border-collapse: collapse; }

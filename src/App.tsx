@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import { fetchPolicies } from './api';
 import { resolvePolicy } from './domain/renewal';
 import { Policy } from './domain/types';
-import { markRenewed } from './state/renewals';
 import Calculator from './screens/Calculator';
+import Confirmation from './screens/Confirmation';
 import PolicyList from './screens/PolicyList';
 
 export default function App() {
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
+  const [confirming, setConfirming] = useState(false);
   const today = new Date();
 
   useEffect(() => {
@@ -31,6 +32,21 @@ export default function App() {
 
   const policy = policies.find((p) => p.policyNo === selected);
 
+  if (confirming) {
+    return (
+      <div className="wrap">
+        <Confirmation
+          today={today}
+          onBack={() => setConfirming(false)}
+          onDone={() => {
+            setConfirming(false);
+            setSelected(null);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="wrap">
       {selected === null ? (
@@ -40,10 +56,7 @@ export default function App() {
           policy={policy}
           today={today}
           onBack={() => setSelected(null)}
-          onComplete={(policyNo) => {
-            markRenewed(policyNo);
-            setSelected(null);
-          }}
+          onContinue={() => setConfirming(true)}
         />
       )}
     </div>

@@ -58,7 +58,8 @@ body {
   text-transform: uppercase;
   margin: 0 0 20px;
 }
-.section-label + .section-label { margin-top: 34px; }
+.section-label + .section-label,
+.summary + .section-label { margin-top: 34px; }
 
 /* ---------- policy table ---------- */
 table { width: 100%; border-collapse: collapse; }

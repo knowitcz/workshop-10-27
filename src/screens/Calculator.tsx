@@ -2,16 +2,16 @@ import { useState } from 'react';
 import CoverageSlider from '../components/CoverageSlider';
 import { calculatePremium, coverageAmount, formatCZK } from '../domain/calc';
 import { daysUntil, isExpiring, QUOTE_LOCK_DAYS } from '../domain/renewal';
-import { Policy } from '../domain/types';
+import { Policy, Quote } from '../domain/types';
 
 interface Props {
   policy: Policy;
   today: Date;
-  onComplete: (policyNo: string) => void;
+  onContinue: () => void;
   onBack: () => void;
 }
 
-export default function Calculator({ policy, today, onComplete, onBack }: Props) {
+export default function Calculator({ policy, today, onContinue, onBack }: Props) {
   const [policyholderName, setPolicyholderName] = useState(policy.policyholder);
   const [age, setAge] = useState(String(policy.age));
   const [country, setCountry] = useState(policy.country);
@@ -215,10 +215,24 @@ export default function Calculator({ policy, today, onComplete, onBack }: Props)
             <button
               type="button"
               className="btn btn-primary"
-              data-cy="renew-policy"
-              onClick={() => onComplete(policy.policyNo)}
+              data-cy="continue"
+              onClick={() => {
+                const quote: Quote = {
+                  policy,
+                  policyholderName,
+                  age: Number(age),
+                  country,
+                  region,
+                  priorClaims: Number(priorClaims),
+                  coverage,
+                  premium,
+                  issuedAt: today,
+                };
+                sessionStorage.setItem('renewalQuote', JSON.stringify(quote));
+                onContinue();
+              }}
             >
-              Renew policy
+              Continue
             </button>
           </div>
         </div>

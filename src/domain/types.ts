@@ -30,3 +30,17 @@ export interface CalcInput {
   coverageLevel: number;
   policyStart: Date;
 }
+
+/** What the calculator hands to the confirmation screen. */
+export interface Quote {
+  policy: Policy;
+  policyholderName: string;
+  age: number;
+  country: string;
+  region: string;
+  priorClaims: number;
+  coverage: number;
+  premium: number;
+  /** The day the quote was calculated. It can be confirmed for QUOTE_LOCK_DAYS. */
+  issuedAt: Date;
+}
