@@ -4,7 +4,7 @@
  *
  *   node scripts/mcp-probe.mjs                          # list the tools
  *   node scripts/mcp-probe.mjs run_e2e_suite            # call one
- *   node scripts/mcp-probe.mjs run_single_test '{"name":"..."}'
+ *   node scripts/mcp-probe.mjs run_test_file '{"spec":"cypress/e2e/policy-list.cy.ts"}'
  */
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
